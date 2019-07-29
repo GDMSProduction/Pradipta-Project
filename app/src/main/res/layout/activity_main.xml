@@ -6,18 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
     <!-- Search Bar -->
-
-    <EditText
+    <SearchView
         android:id="@+id/searchView"
         android:layout_width="319dp"
         android:layout_height="78dp"
@@ -29,6 +19,7 @@
         android:layout_marginBottom="8dp"
         android:iconifiedByDefault="false"
         android:queryHint="Search Here"
+        android:inputType="text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.03"
@@ -36,46 +27,47 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.049">
 
-    </EditText>
+    </SearchView>
 
     <!--Image View to show the image -->
 
-    <ImageView
-        android:id="@+id/ExImage"
-        android:layout_width="159dp"
-        android:layout_height="117dp"
-        android:layout_marginTop="116dp"
-        android:contentDescription="@string/bicycle_image"
-        app:layout_constraintEnd_toEndOf="@+id/searchView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/searchView"
-        app:layout_constraintTop_toTopOf="@+id/searchView" />
+    <!--<ImageView-->
+        <!--android:id="@+id/ExImage"-->
+        <!--android:layout_width="159dp"-->
+        <!--android:layout_height="117dp"-->
+        <!--android:layout_marginTop="116dp"-->
+        <!--android:contentDescription="@string/bicycle_image"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/searchView"-->
+        <!--app:layout_constraintHorizontal_bias="0.0"-->
+        <!--app:layout_constraintStart_toStartOf="@+id/searchView"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/searchView"-->
+        <!--/>-->
 
     <ImageView
         android:id="@+id/ExImage2"
         android:layout_width="177dp"
         android:layout_height="112dp"
-        android:layout_marginTop="132dp"
-        android:visibility="invisible"
+        android:layout_marginStart="176dp"
+        android:layout_marginLeft="176dp"
+        android:layout_marginTop="120dp"
         android:contentDescription="@string/bicycle_image"
-        app:layout_constraintEnd_toEndOf="@+id/searchView"
-        app:layout_constraintHorizontal_bias="1.0"
+
         app:layout_constraintStart_toStartOf="@+id/searchView"
         app:layout_constraintTop_toTopOf="@+id/searchView"
-        app:srcCompat="@drawable/car1" />
+        />
 
     <ImageView
         android:id="@+id/ExImage3"
         android:layout_width="177dp"
         android:layout_height="112dp"
-        android:layout_marginTop="256dp"
+        android:layout_marginStart="368dp"
+        android:layout_marginLeft="368dp"
+        android:layout_marginTop="120dp"
         android:contentDescription="@string/bicycle_image"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/searchView"
-        app:layout_constraintHorizontal_bias="0.0"
+
         app:layout_constraintStart_toStartOf="@+id/searchView"
         app:layout_constraintTop_toTopOf="@+id/searchView"
-        app:srcCompat="@drawable/camera1" />
+        />
 
     <!--Search Button-->
     <Button
@@ -113,52 +105,52 @@
         app:layout_constraintTop_toTopOf="@+id/searchView" />
 
 
-        <!--<ProgressBar-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--tools:layout_editor_absoluteX="0dp"-->
-        <!--tools:layout_editor_absoluteY="435dp" />-->
-        <!--&android:layout_centralHorizontal="true"-->
-        <!--android:indeterminate="true"-->
-        <!--android:visibility="gone"-->
-        <!--android:id ="@+id/progressBar"-->
-        <!--android:gravity= "center"-->
-
-        <!--app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"/>-->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
+        tools:layout_editor_absoluteX="-68dp" />
 
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="567dp"
-        android:layout_height="782dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="172dp"
+        android:layout_marginTop="164dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+<LinearLayout
+    android:layout_width="550dp"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/ExImage"
+        android:layout_width="159dp"
+        android:layout_height="117dp"
+        android:layout_marginTop="116dp"
+        android:contentDescription="@string/bicycle_image"
+       android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/responseView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content" />-->
+</LinearLayout>
 
 
-        <TextView
-            android:id="@+id/responseView"
-            android:layout_width="448dp"
-            android:layout_height="591dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="228dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.226"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/scrollView2" />
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content" />-->
+
+
     </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

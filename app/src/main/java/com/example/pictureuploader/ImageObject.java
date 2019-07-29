@@ -1,3 +1,5 @@
+package com.example.pictureuploader;
+
 public class ImageObject {
     String id;
     String url;
@@ -16,7 +18,7 @@ public class ImageObject {
 //    @androidx.annotation.NonNull
     @Override
     public String toString() {
-        return "id: " + id + "\nurl: " + url + "\nimage url: " + imageurl + "\nPhotographer Name: " + PhotographerName;
+        return "\n\nid: " + id + "\nurl: " + url + "\nimage url: " + imageurl + "\nPhotographer Name: " + PhotographerName;
 
     }
 }

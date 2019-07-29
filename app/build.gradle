@@ -21,14 +21,25 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.0-beta1'
     testImplementation 'junit:junit:4.13-beta-3'
 
-    implementation 'com.squareup.picasso:picasso:2.71828'             //Picasso implementation
+    //Picasso implementation
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation files('libs\\commons-io-2.6.jar')
+    implementation files('libs/commons-io-2.6.jar')
+    implementation files('libs/jsoup-1.12.1.jar')
+
+    //Retrofit implementation
+    implementation 'com.squareup.retrofit2:converter-scalars:2.6.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+
+
 }
