@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,26 +72,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    ProgressBar progressBar;
-    private int progressStatus = 0;
-    private Handler handler = new Handler();
 
     public boolean ex;
 
-    //Button searchbtn = (Button) findViewById(R.id.search_btn);
-    //SearchView responseView;
-    //SearchView searchView;
+    SearchView searchView;
 
     private TextView textView;
 
     private String TAG = "DEBUGGING PROJECT -------------------------------------------------------------------";
 
     //private parseJSON selectedExamples;
-
-    //private Context mContext;
-
-
-
 
 
     @Override
@@ -99,24 +91,20 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.responseView);
 
-//        final Button searchbtn = (Button) findViewById(R.id.search_btn);
-            searchbtn =  (Button) findViewById(R.id.search_btn);
-
-            //progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        searchbtn =  (Button) findViewById(R.id.search_btn);
 
         final String jsonText = textView.getText().toString();
-
-
 
         //boolean Download = new RetrieveFeedTask().isDownload;
         searchbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 searchTopic = textView.getText().toString();
-                API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "query&per_page=10&page=1";
+
+                API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "query&per_page=15&page=1";
 
 
-//                //To get Image from the pexels web
+               //To get Image from the pexels web
                 imageView = findViewById(R.id.ExImage);               //Initialize imageView
 
                 ex = false;
@@ -125,40 +113,17 @@ public class MainActivity extends AppCompatActivity {
                 //progressBar.setVisibility(View.VISIBLE);
                 if (!searchTopic.isEmpty()){
                     new RetrieveFeedTask().execute(API_URL);
+
                 }else{
                     textView.setText("No Result");
                     searchbtn.setEnabled(true);
+
                 }
 
             }
         });
-        //Progress Bar
-//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                while (progressStatus < 50){
-//                    progressStatus += 1;
-//
-//                    //Update the progress bar
-//                    handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            progressBar.setProgress(progressStatus);
-//                            textView.setText(progressStatus + "/" + progressBar.getMax());
-//                        }
-//                    });
-//                    try{
-//                        //sleep for 200 miliseconds
-//                        Thread.sleep(200);
-//                    }catch(InterruptedException e){
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
+
+
     }
 
     class RetrieveFeedTask extends AsyncTask<String, String, String>{
@@ -170,26 +135,27 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView) findViewById(R.id.responseView);
         public  boolean isDownload = false;
         String results = " ";
-       // public String apiurlTry = "https://api.pexels.com/v1/search?query=pets+query&per_page=15&page=1";
-
 
         protected void onPreExecute(){
             //Log.d (TAG, "execute - UI thread");
             // searchView.getActionView();
             //searchView.getText("");
             textView.setText(" Loading....");
+
+
             Log.i(TAG, "onPreExecute: Start of Running...");
             super.onPreExecute();
 
         }
 
 
-//App Connect to API
+        //App Connect to API
         protected String doInBackground(String... urls){
               //SearchView searchView = findViewById(R.id.searchView);
               //String results = " ";
           return InputDownload(urls[0]);
         }
+
 
         private String InputDownload(String i ){
             // HTTP URL connection reference.
@@ -202,6 +168,8 @@ public class MainActivity extends AppCompatActivity {
             if(!isDownload) {
 //                Log.i(TAG, "InputDownload: is" + i);
                 try {
+
+
                     // Create new URL
                     url = new URL(i);
                     // Open connection
@@ -269,10 +237,9 @@ public class MainActivity extends AppCompatActivity {
                 response = "THERE WAS AN ERROR";
             }
 
-
             //if search is empty will show an error
            // Log.i(TAG, "onPostExecute: " + API_URL);
-                if(response.equals("{\"total_results\":0,\"page\":1,\"per_page\":10,\"photos\":[]}"))
+                if(response.equals("{\"total_results\":0,\"page\":1,\"per_page\":15,\"photos\":[]}"))
                 {
 
                     textView.setText("No Images found");
@@ -289,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             searchbtn.setEnabled(true);
+
 
 
 
@@ -336,18 +304,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 }
-
-
-//
-//                String ValueA = innerObj.getString("KeyA");
-//                String ValueB = innerObj.getString("KeyB");
-//                String ValueC = innerObj.getString("KeyC");
-
-//                Log.i(TAG, "Value A: " + ValueA);
-//                Log.i(TAG, "Value B: " + ValueB);
-//                Log.i(TAG, "Value C: " + ValueC);
-
-                // textView.setText("ValueA: " + ValueA + "\n ValueB:" + ValueB + "\nValueC" + ValueC);
 
             } catch(Exception e){
                 Log.i(TAG, "parseJsonDataObjectMultiple: ERROR");
