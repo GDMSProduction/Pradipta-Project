@@ -1,5 +1,7 @@
 package com.example.pictureuploader;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,9 +11,11 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.TestLooperManager;
 import android.renderscript.Sampler;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,7 +63,7 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-   public ImageView imageView;
+    public ImageView imageView;
 
     //Search Button
     public Button searchbtn;
@@ -69,9 +73,6 @@ public class MainActivity extends AppCompatActivity {
     static final String API_KEY = "563492ad6f91700001000001a31e67b4f9464550ad8c0f89490b8e20";
     static  String API_URL = "";
     static String searchTopic = "";
-
-
-
 
     public boolean ex;
 
@@ -99,12 +100,13 @@ public class MainActivity extends AppCompatActivity {
         searchbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                searchTopic = textView.getText().toString();
+                searchTopic = searchView.getQuery().toString();
+                //searchTopic = textView.getText().toString();
 
                 API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "query&per_page=15&page=1";
 
 
-               //To get Image from the pexels web
+                //To get Image from the pexels web
                 imageView = findViewById(R.id.ExImage);               //Initialize imageView
 
                 ex = false;
@@ -123,14 +125,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+        @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        MenuItem searchMenuItem = menu.findItem(R.id.searchView);
+            SearchView searchView = (SearchView) menu.findItem(R.id.searchView).getActionView();
+
+        //Get the searchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+
+        return true;
 
     }
+
+
 
     class RetrieveFeedTask extends AsyncTask<String, String, String>{
         //private Exception exception;
         //public static final String TAG = "string";
 
-      public  ArrayList<ImageObject> Arrayimages =  new ArrayList<>();
+        public  ArrayList<ImageObject> Arrayimages =  new ArrayList<>();
 
         TextView textView = (TextView) findViewById(R.id.responseView);
         public  boolean isDownload = false;
@@ -151,9 +170,9 @@ public class MainActivity extends AppCompatActivity {
 
         //App Connect to API
         protected String doInBackground(String... urls){
-              //SearchView searchView = findViewById(R.id.searchView);
-              //String results = " ";
-          return InputDownload(urls[0]);
+            //SearchView searchView = findViewById(R.id.searchView);
+            //String results = " ";
+            return InputDownload(urls[0]);
         }
 
 
@@ -164,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream is = null;
 
 
-           // String results = "";
+            // String results = "";
             if(!isDownload) {
 //                Log.i(TAG, "InputDownload: is" + i);
                 try {
@@ -238,21 +257,21 @@ public class MainActivity extends AppCompatActivity {
             }
 
             //if search is empty will show an error
-           // Log.i(TAG, "onPostExecute: " + API_URL);
-                if(response.equals("{\"total_results\":0,\"page\":1,\"per_page\":15,\"photos\":[]}"))
-                {
+            // Log.i(TAG, "onPostExecute: " + API_URL);
+            if(response.equals("{\"total_results\":0,\"page\":1,\"per_page\":15,\"photos\":[]}"))
+            {
 
-                    textView.setText("No Images found");
-                }
-                else
-                {
-                    textView.setText("");
-                    parseJsonDataObjectMultiple(response);
+                textView.setText("No Images found");
+            }
+            else
+            {
+                textView.setText("");
+                parseJsonDataObjectMultiple(response);
 
-                }
+            }
 
             //progressBar.setVisibility(View.GONE);
-           // Log.i("INFO", response);
+            // Log.i("INFO", response);
 
 
             searchbtn.setEnabled(true);
@@ -320,17 +339,6 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-
         }
-
-
-
     }
-
-
-
-
 }
-
-
-
