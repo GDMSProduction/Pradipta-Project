@@ -88,10 +88,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+         setContentView(R.layout.activity_main);
 
         textView = findViewById(R.id.responseView);
-
+        searchView = findViewById(R.id.searchView);
         searchbtn =  (Button) findViewById(R.id.search_btn);
 
         final String jsonText = textView.getText().toString();
@@ -100,10 +100,13 @@ public class MainActivity extends AppCompatActivity {
         searchbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                searchTopic = "";
                 searchTopic = searchView.getQuery().toString();
-                //searchTopic = textView.getText().toString();
 
-                API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "query&per_page=15&page=1";
+                searchView.clearFocus();
+
+                API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "+query&per_page=15&page=1";
+
 
 
                 //To get Image from the pexels web
@@ -121,29 +124,9 @@ public class MainActivity extends AppCompatActivity {
                     searchbtn.setEnabled(true);
 
                 }
-
             }
         });
-
     }
-        @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        MenuItem searchMenuItem = menu.findItem(R.id.searchView);
-            SearchView searchView = (SearchView) menu.findItem(R.id.searchView).getActionView();
-
-        //Get the searchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-
-        return true;
-
-    }
-
-
 
     class RetrieveFeedTask extends AsyncTask<String, String, String>{
         //private Exception exception;
@@ -319,8 +302,6 @@ public class MainActivity extends AppCompatActivity {
                     ImageObject images = new ImageObject(idJson, urlJson,srcJson,photographerJson);
 
                     Arrayimages.add(images);
-
-
 
                 }
 
