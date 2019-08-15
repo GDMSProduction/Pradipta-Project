@@ -20,6 +20,7 @@
         android:iconifiedByDefault="false"
         android:queryHint="Search Here"
         android:inputType="text"
+        android:imeOptions="actionSearch"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

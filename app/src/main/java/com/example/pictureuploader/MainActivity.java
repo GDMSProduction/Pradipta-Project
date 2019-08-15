@@ -5,6 +5,7 @@ import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.AsyncTask;
@@ -17,10 +18,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -93,10 +96,27 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.responseView);
         searchView = findViewById(R.id.searchView);
         searchbtn =  (Button) findViewById(R.id.search_btn);
-
         final String jsonText = textView.getText().toString();
 
-        //boolean Download = new RetrieveFeedTask().isDownload;
+       searchView.setOnKeyListener(new View.OnKeyListener() {
+           @Override
+           public boolean onKey(View v, int keyCode, KeyEvent event) {
+               if(event.getAction() == KeyEvent.ACTION_DOWN)
+               {
+                   switch(keyCode)
+                   {
+                       case KeyEvent.KEYCODE_SEARCH:
+                        // Apply action which you want on search key press on keypad
+
+                           return true;
+                       default:
+                           break;
+                   }
+               }
+               return false;
+           }
+       });
+
         searchbtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -128,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
     class RetrieveFeedTask extends AsyncTask<String, String, String>{
         //private Exception exception;
         //public static final String TAG = "string";
@@ -137,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView) findViewById(R.id.responseView);
         public  boolean isDownload = false;
         String results = " ";
-
+        ImageView bmImage;
         protected void onPreExecute(){
             //Log.d (TAG, "execute - UI thread");
             // searchView.getActionView();
@@ -147,9 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.i(TAG, "onPreExecute: Start of Running...");
             super.onPreExecute();
-
         }
-
 
         //App Connect to API
         protected String doInBackground(String... urls){
@@ -191,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         // Get the stream
                         is = connection.getInputStream();
                         Log.i("TAG", "dataUrl: IS " + is);
-                        // Convert the stream to a string (think about out utils lib)
+                        // Convert the stream to a string (think about out utils lib
                         if (is != null) {
                             results = IOUtils.toString(is, "UTF-8");
                         }
@@ -234,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String response) {
 
-
+            ImageView imageView = findViewById(R.id.ExImage);
             if(response == null) {
                 response = "THERE WAS AN ERROR";
             }
@@ -248,7 +269,9 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                textView.setText("");
+                //textView.setText("");
+                Picasso.get().load(API_URL).into(imageView);
+
                 parseJsonDataObjectMultiple(response);
 
             }
