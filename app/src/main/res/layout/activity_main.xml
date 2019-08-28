@@ -33,17 +33,6 @@
 
     <!--Image View to show the image -->
 
-    <!--<ImageView-->
-        <!--android:id="@+id/ExImage"-->
-        <!--android:layout_width="159dp"-->
-        <!--android:layout_height="117dp"-->
-        <!--android:layout_marginTop="116dp"-->
-        <!--android:contentDescription="@string/bicycle_image"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/searchView"-->
-        <!--app:layout_constraintHorizontal_bias="0.0"-->
-        <!--app:layout_constraintStart_toStartOf="@+id/searchView"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/searchView"-->
-        <!--/>-->
 
     <ImageView
         android:id="@+id/ExImage2"
@@ -118,15 +107,16 @@
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="567dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="152dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -153,5 +143,27 @@
 
 
     </ScrollView>
+
+    <ListView
+        android:id="@+id/imagesList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/search_btn" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
 </android.support.constraint.ConstraintLayout>

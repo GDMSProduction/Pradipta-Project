@@ -1,72 +1,37 @@
 package com.example.pictureuploader;
 
-import android.app.SearchManager;
-import android.app.SearchableInfo;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
-import android.nfc.Tag;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.TestLooperManager;
-import android.renderscript.Sampler;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.JsonObject;
-import com.squareup.picasso.OkHttp3Downloader;
-import com.squareup.picasso.Picasso;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.io.IOException;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.security.auth.login.LoginException;
-
-
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
     public ImageView imageView;
+    public ArrayList<Bitmap> ImagesList = new ArrayList<>();
 
     //Search Button
     public Button searchbtn;
@@ -81,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
 
+    ListView imageListview;
     private TextView textView;
 
     private String TAG = "DEBUGGING PROJECT -------------------------------------------------------------------";
@@ -92,30 +58,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          setContentView(R.layout.activity_main);
-
+        imageListview = findViewById(R.id.imagesList);
         textView = findViewById(R.id.responseView);
         searchView = findViewById(R.id.searchView);
         searchbtn =  (Button) findViewById(R.id.search_btn);
         final String jsonText = textView.getText().toString();
 
-       searchView.setOnKeyListener(new View.OnKeyListener() {
-           @Override
-           public boolean onKey(View v, int keyCode, KeyEvent event) {
-               if(event.getAction() == KeyEvent.ACTION_DOWN)
-               {
-                   switch(keyCode)
-                   {
-                       case KeyEvent.KEYCODE_SEARCH:
-                        // Apply action which you want on search key press on keypad
 
-                           return true;
-                       default:
-                           break;
-                   }
-               }
-               return false;
-           }
-       });
+//       searchView.setOnKeyListener(new View.OnKeyListener() {
+//           @Override
+//           public boolean onKey(View v, int keyCode, KeyEvent event) {
+//               if(event.getAction() == KeyEvent.ACTION_DOWN)
+//               {
+//                   switch(keyCode)
+//                   {
+//                       case KeyEvent.KEYCODE_SEARCH:
+//                        // Apply action which you want on search key press on keypad
+//
+//                           return true;
+//                       default:
+//                           break;
+//                   }
+//               }
+//               return false;
+//           }
+//       });
+
+
 
         searchbtn.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -126,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 searchView.clearFocus();
 
                 API_URL = "https://api.pexels.com/v1/search?query=" + searchTopic + "+query&per_page=15&page=1";
-
-
 
                 //To get Image from the pexels web
                 imageView = findViewById(R.id.ExImage);               //Initialize imageView
@@ -147,9 +114,51 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private class DownloadImageTask extends AsyncTask<String, Bitmap, Bitmap> {
+        ImageView bmImage ;
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
+        public DownloadImageTask(ImageView bmImage) {
 
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            return InputDownload(urls[0]);
+        }
+
+        private Bitmap InputDownload(String i ){
+            String urldisplay = i;
+            Bitmap bitmap = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                bitmap = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+
+            return bitmap;
+        }
+
+        @Override
+        protected void onProgressUpdate(Bitmap... values) {
+            super.onProgressUpdate(values);
+        }
+
+        protected void onPostExecute(Bitmap result) {
+
+            ImagesList.add(result);
+
+            imageView.setImageBitmap(result);
+
+            imageListview.invalidateViews();
+        }
+    }
 
     class RetrieveFeedTask extends AsyncTask<String, String, String>{
         //private Exception exception;
@@ -160,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView) findViewById(R.id.responseView);
         public  boolean isDownload = false;
         String results = " ";
-        ImageView bmImage;
+
         protected void onPreExecute(){
             //Log.d (TAG, "execute - UI thread");
             // searchView.getActionView();
@@ -174,17 +183,18 @@ public class MainActivity extends AppCompatActivity {
 
         //App Connect to API
         protected String doInBackground(String... urls){
-            //SearchView searchView = findViewById(R.id.searchView);
-            //String results = " ";
+
             return InputDownload(urls[0]);
         }
 
 
-        private String InputDownload(String i ){
+      private String InputDownload(String i ){
+
+
             // HTTP URL connection reference.
             URL url;
             HttpURLConnection connection = null;
-            InputStream is = null;
+           InputStream is = null;
 
 
             // String results = "";
@@ -211,8 +221,10 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("TAG", "dataUrl: not null");
                         // Get the stream
                         is = connection.getInputStream();
+
+
                         Log.i("TAG", "dataUrl: IS " + is);
-                        // Convert the stream to a string (think about out utils lib
+                        // Convert the stream to a string (think about out utils lib)
                         if (is != null) {
                             results = IOUtils.toString(is, "UTF-8");
                         }
@@ -246,7 +258,10 @@ public class MainActivity extends AppCompatActivity {
 
 
             return results;
-        }
+
+
+     }
+
 
         @Override
         protected void onProgressUpdate(String... values) {
@@ -255,7 +270,9 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(String response) {
 
-            ImageView imageView = findViewById(R.id.ExImage);
+            ImageView bmImage = (ImageView) findViewById(R.id.ExImage);
+
+
             if(response == null) {
                 response = "THERE WAS AN ERROR";
             }
@@ -269,8 +286,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else
             {
-                //textView.setText("");
-                Picasso.get().load(API_URL).into(imageView);
+                textView.setText("");
+//                bmImage.setImageBitmap(bitmap);
 
                 parseJsonDataObjectMultiple(response);
 
@@ -278,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
 
             //progressBar.setVisibility(View.GONE);
             // Log.i("INFO", response);
-
 
             searchbtn.setEnabled(true);
 
@@ -298,6 +314,7 @@ public class MainActivity extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
         }
+
         void parseJsonDataObjectMultiple(String _jsonDataString){
             Log.i(TAG, "parseJsonDataObjectMultiple: it got here");
             try{
@@ -334,15 +351,72 @@ public class MainActivity extends AppCompatActivity {
             }
 
             String Show = "";
+
+            ArrayList<String>imagesurl = new ArrayList<>();
+            ArrayAdapter<Bitmap> itemsAdapter = new ArrayAdapter<Bitmap>(getApplicationContext(), android.R.layout.simple_gallery_item, ImagesList);
             for (int i = 0; i < Arrayimages.size() ; i++) {
                 textView.append(Arrayimages.get(i).toString());
+                imagesurl.add(Arrayimages.get(i).imageurl);
+
 
                 if (imageView != null) {
-                    Picasso.get().load(Arrayimages.get(i).imageurl).into(imageView);
+                    //imageView.setVisibility(View.VISIBLE);
+                  DownloadImageTask downloadimage = new DownloadImageTask((imageView));
+                  downloadimage.execute(Arrayimages.get(i).imageurl);
+
+                  //DownloadImageTask.execute(Arrayimages.get(i).imageurl);
+
+//                    Picasso.get().load(Arrayimages.get(i).imageurl).into(imageView);
                 }
 
-
             }
+            ImageAdapter imgadapter = new ImageAdapter(getApplicationContext(), ImagesList);
+
+            imageListview.setAdapter(imgadapter);
         }
     }
+
+
+}
+
+class ImageAdapter extends BaseAdapter {
+    private Context mContext;
+    private ArrayList<Bitmap> images;
+
+    public ImageAdapter(Context c, ArrayList<Bitmap> imagesbmp) {
+        mContext = c;
+        images = new ArrayList<>();
+        images = imagesbmp;
+    }
+
+    public int getCount() {
+        return images.size();
+    }
+
+    public Object getItem(int position) {
+        return null;
+    }
+
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    // create a new ImageView for each item referenced by the Adapter
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ImageView imageView;
+        if (convertView == null) {  // if it's not recycled, initialize some attributes
+            imageView = new ImageView(mContext);
+            imageView.setLayoutParams(new GridView.LayoutParams(150, 300));
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setPadding(8, 15, 8, 15);
+        } else {
+            imageView = (ImageView) convertView;
+        }
+
+        imageView.setImageBitmap(images.get(position));
+        return imageView;
+    }
+
+    // references to your images
+
 }
